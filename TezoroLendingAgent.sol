@@ -112,7 +112,8 @@ contract TezoroLendingAgent is Ownable, ReentrancyGuard {
         uint16 indexed protocolCode,
         bytes32 indexed marketId,
         address onBehalfOf,
-        uint256 amount
+        uint256 minAmount,
+        uint256 maxAmount
     );
 
     event Repaid(
@@ -276,13 +277,13 @@ contract TezoroLendingAgent is Ownable, ReentrancyGuard {
         (address target, bytes memory callData) = ILendingAdapter(adapter)
             .getWithdrawCallData(market, address(this));
 
-        uint256 beforeBalance = IERC20(market.loanToken).balanceOf(
+        uint256 beforeBalance = IERC20(market.collateralToken).balanceOf(
             address(this)
         );
 
         _safeCall(target, callData);
 
-        uint256 afterBalance = IERC20(market.loanToken).balanceOf(
+        uint256 afterBalance = IERC20(market.collateralToken).balanceOf(
             address(this)
         );
         withdrawnAmount = afterBalance - beforeBalance;
@@ -347,7 +348,7 @@ contract TezoroLendingAgent is Ownable, ReentrancyGuard {
                 revert InvalidParam("Invalid protocol codes provided");
             }
 
-            address token = step.fromMarket.loanToken;
+            address token = step.fromMarket.collateralToken;
             bytes32 fromMarketId = _marketId(
                 step.fromProtocolCode,
                 step.fromMarket
@@ -474,7 +475,7 @@ contract TezoroLendingAgent is Ownable, ReentrancyGuard {
         uint256[] calldata _amounts
     )
         external
-        onlyOwner
+        onlyKeeperOrOwner
         notDisabled
         nonReentrant
         protocolsNotPaused(_protocolCodes)
@@ -499,7 +500,7 @@ contract TezoroLendingAgent is Ownable, ReentrancyGuard {
             address adapter = protocolToAdapter[protocolCode];
             if (adapter == address(0)) revert ProtocolNotFound(protocolCode);
 
-            IERC20(token).safeTransferFrom(msg.sender, address(this), amount);
+            IERC20(token).safeTransferFrom(this.owner(), address(this), amount);
 
             _supplyToMarket(token, market, protocolCode, amount);
         }
@@ -637,9 +638,9 @@ contract TezoroLendingAgent is Ownable, ReentrancyGuard {
         uint256[] memory preBalances
     ) internal {
         bytes32 marketId = _marketId(p.protocolCode, p.market);
-        uint256 allocationNonce = currentAllocationNonce[p.market.loanToken][
-            marketId
-        ];
+        uint256 allocationNonce = currentAllocationNonce[
+            p.market.collateralToken
+        ][marketId];
         if (allocationNonce == 0)
             revert InvalidParam("Claim before any supply");
         unchecked {
@@ -658,7 +659,7 @@ contract TezoroLendingAgent is Ownable, ReentrancyGuard {
                 }
 
                 emit RewardsClaimed(
-                    p.market.loanToken,
+                    p.market.collateralToken,
                     p.protocolCode,
                     marketId,
                     p.recipient,
@@ -673,8 +674,9 @@ contract TezoroLendingAgent is Ownable, ReentrancyGuard {
     function borrow(
         uint16 protocolCode,
         TezoroLendingLib.Market memory market,
-        uint256 amount
-    ) external onlyOwner notDisabled nonReentrant {
+        uint256 minAmount,
+        uint256 maxAmount
+    ) external onlyKeeperOrOwner notDisabled nonReentrant {
         if (_isProtocolPaused(protocolCode)) {
             revert ProtocolPaused(protocolCode);
         }
@@ -682,6 +684,7 @@ contract TezoroLendingAgent is Ownable, ReentrancyGuard {
         address adapter = protocolToAdapter[protocolCode];
         if (adapter == address(0)) revert ProtocolNotFound(protocolCode);
 
+        uint256 amount = maxAmount == 0 ? minAmount : maxAmount;
         (address[] memory targets, bytes[] memory callDatas) = ILendingAdapter(
             adapter
         ).getBorrowSequenceCallData(market, amount, address(this));
@@ -712,7 +715,8 @@ contract TezoroLendingAgent is Ownable, ReentrancyGuard {
             protocolCode,
             marketId,
             address(this),
-            amount
+            minAmount,
+            maxAmount
         );
     }
 
