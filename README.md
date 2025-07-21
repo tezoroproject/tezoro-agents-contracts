@@ -85,6 +85,6 @@ This framework enables efficient multi-protocol asset management in DeFi through
 
 # Integration
 
-The product integrates MetaMask SDK through Wagmi, providing reliable connectivity across MetaMask Extension, MetaMask Mobile, and MetaMask Portfolio. This setup includes automatic session management and chain switching capabilities.
+The product integrates MetaMask SDK through Wagmi, providing reliable connectivity across MetaMask Extension, MetaMask Mobile. This setup includes automatic session management and chain switching capabilities.
 
 Delivers consistent user experience across all platforms with production-ready reliability.
