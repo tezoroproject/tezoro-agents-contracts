@@ -81,3 +81,10 @@ Strict permission controls with owner and keeper roles. Reentrancy protection an
 Agents coordinate without heavy on-chain storage. Off-chain strategies remain compatible through event monitoring. Supports automated vaults, custom strategies, and delegated management.
 
 This framework enables efficient multi-protocol asset management in DeFi through standardized interfaces and isolated execution environments.
+
+
+# Integration
+
+The product integrates MetaMask SDK through Wagmi, providing reliable connectivity across MetaMask Extension, MetaMask Mobile, and MetaMask Portfolio. This setup includes automatic session management and chain switching capabilities.
+
+Delivers consistent user experience across all platforms with production-ready reliability.
