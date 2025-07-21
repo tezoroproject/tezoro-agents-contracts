@@ -5,11 +5,17 @@ TezoroLendingAgent is a modular lending router that connects to multiple DeFi le
 ## Core Features
 
 **Multi-Protocol Support** - Works with different lending protocols via standardized adapters
+
 **Dynamic Rebalancing** - Moves funds between protocols based on defined strategies
+
 **Reward Collection** - Harvests protocol rewards and sends them to the owner
+
 **Borrowing Operations** - Handles borrowing and repayment across supported markets
+
 **Batch Operations** - Withdraws from multiple protocols in a single transaction
+
 **Permission System** - Owner and keeper roles control critical functions
+
 **Event Logging** - Comprehensive events for tracking and analytics
 
 Deployment requires TezoroLendingAgentFactory. Protocol interactions happen through adapters implementing ILendingAdapter or ILendingAdapterWithRewards.
@@ -23,8 +29,11 @@ Factory contract for deploying TezoroLendingAgent instances using EIP-1167 clone
 ## Responsibilities
 
 **Agent Deployment** - Creates lightweight agent clones from base implementation
+
 **Adapter Setup** - Validates and configures protocol adapters during initialization
+
 **Keeper Registry** - Manages authorized addresses for rebalancing and distributions
+
 **Fee Management** - Sets yearly management fees (capped at 1%)
 
 Single deployment per version. Agents reference the factory for permissions and configuration.
