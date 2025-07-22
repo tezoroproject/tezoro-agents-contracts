@@ -1,21 +1,10 @@
-# Tezoro
+# TezoroLendingAgent
 
-Repository contains multiple directories, each with its own README file.
-
-- `automation`: Contains code for automating rebalancing, liquidation protection and balance keeping.
-- `contracts`: Contains smart contracts for Tezoro agents and adapters.
-- `front`: Contains the frontend user interface for Tezoro.
-- `indexer`: Contains the indexer for collecting and providing data from Tezoro contracts events.
-
-## Tezoro Contracts
-
-Directory: `contracts`
-
-### TezoroLendingAgent
+SEE FRONTEND `config.ts` FILE FOR DEPLOYED CONTRACTS
 
 TezoroLendingAgent is a modular lending router that connects to multiple DeFi lending protocols through adapters.
 
-#### Core Features
+## Core Features
 
 **Multi-Protocol Support** - Works with different lending protocols via standardized adapters
 
@@ -35,11 +24,11 @@ Deployment requires TezoroLendingAgentFactory. Protocol interactions happen thro
 
 ---
 
-#### TezoroLendingAgentFactory
+# TezoroLendingAgentFactory
 
 Factory contract for deploying TezoroLendingAgent instances using EIP-1167 clones.
 
-##### Responsibilities
+## Responsibilities
 
 **Agent Deployment** - Creates lightweight agent clones from base implementation
 
@@ -53,70 +42,44 @@ Single deployment per version. Agents reference the factory for permissions and 
 
 ---
 
-#### ILendingAdapter Interface
+# ILendingAdapter Interface
 
 Standardized interface for protocol adapters used by TezoroLendingAgent to interact with external lending protocols like Aave, Compound, Morpho, and Fluid.
 
-##### Core Methods
+## Core Methods
 
-###### Protocol Info
+### Protocol Info
 - `protocolCode()` - Unique identifier for the protocol
 - `name()` - Human-readable adapter name
 
-###### Supply Operations
+### Supply Operations
 - `getSupplyCallData(market, amount, user)` - Returns calldata for supplying assets
 - `getWithdrawCallData(market, user)` - Returns calldata for full withdrawal
 - `getSupplyBalance(market, user)` - Current supplied balance
 
-###### Borrowing Operations
+### Borrowing Operations
 - `getBorrowBalance(market, user)` - Outstanding debt amount
 - `getBorrowSequenceCallData(market, amount, user)` - Multi-step borrowing sequence
 - `getRepaySequenceCallData(market, amount, user)` - Repayment sequence
 
-###### Position Management
+### Position Management
 - `getHealthFactor(market, user)` - Position health ratio
 - `getUserPosition(user, markets[])` - Aggregated position across markets
 
 ---
 
-### Architecture Benefits
+# Architecture Benefits
 
-#### Gas Optimization
+## Gas Optimization
 Protocol-specific code lives in lightweight adapters, reducing main contract complexity. EIP-1167 clones enable cheap deployment of isolated agent instances.
 
-#### Modularity
+## Modularity
 Plug-and-play adapter system allows protocol integration without core contract changes. Cross-protocol operations work through unified interfaces.
 
-#### Security
+## Security
 Strict permission controls with owner and keeper roles. Reentrancy protection and fail-safe reward claiming prevent common attack vectors. Agent isolation eliminates shared state risks.
 
-#### Scalability
+## Scalability
 Agents coordinate without heavy on-chain storage. Off-chain strategies remain compatible through event monitoring. Supports automated vaults, custom strategies, and delegated management.
 
 This framework enables efficient multi-protocol asset management in DeFi through standardized interfaces and isolated execution environments.
-
-
-## Tezoro Frontend
-
-Directory: `frontend`
-
-A user interface for supplying and borrowing.
-
-Using Vite, Wagmi, Tailwind CSS, GraphQL.
-
-Integrating as widget into any website.
-
-### MetaMask Integration
-
-The product integrates MetaMask SDK through Wagmi, providing reliable connectivity across MetaMask Extension, MetaMask Mobile. This setup includes automatic session management and chain switching capabilities.
-
-Delivers consistent user experience across all platforms with production-ready reliability.
-
-
-## Tezoro Indexer
-
-Directory: `indexer`
-
-An indexer for collecting and providing data from Tezoro contracts events.
-
-Using Ponder, a TypeScript-based indexing framework for Ethereum.

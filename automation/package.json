@@ -1,0 +1,32 @@
+{
+  "name": "tezoro-lending-automation",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "pnpm run codegen && tsx src/index.ts",
+    "codegen": "graphql-codegen",
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@graphql-codegen/cli": "^5.0.7",
+    "@graphql-codegen/typescript-graphql-request": "^6.3.0",
+    "abitype": "^1.0.8",
+    "bignumber.js": "^9.3.0",
+    "dotenv": "^16.5.0",
+    "graphql-request": "^7.2.0",
+    "graphql-tag": "^2.12.6",
+    "superjson": "^2.2.2",
+    "tsx": "^4.19.3",
+    "viem": "^2.28.0",
+    "zod": "^3.24.3"
+  },
+  "devDependencies": {
+    "@types/node": "^22.14.1"
+  }
+}

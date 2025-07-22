@@ -1,0 +1,92 @@
+query userAgentsQuery($userAddress: String!) {
+  agents(where: { creator: $userAddress }) {
+    totalCount
+    items {
+      id
+      creator
+      adapters
+      createdAt
+      disabledAt
+    }
+  }
+}
+
+query agentPositionsQuery($agentAddress: String!) {
+  positions(where: { agent: $agentAddress }) {
+    totalCount
+    items {
+      id
+      token {
+        address
+        symbol
+        name
+        decimals
+      }
+      timestamp
+      blockNumber
+      allocations {
+        totalCount
+        items {
+          id
+          amount
+          timestamp
+          withdrawal {
+            id
+            amount
+            managementFee
+            timestamp
+          }
+          market {
+            id
+            protocolCode
+            loanToken {
+              address
+              symbol
+              name
+              decimals
+            }
+            collateralToken {
+              address
+              symbol
+              name
+              decimals
+            }
+            marketAddress
+            auxId
+            flags
+          }
+        }
+      }
+    }
+  }
+}
+
+query agentLoansQuery($agentAddress: String!) {
+  borrows(where: { agent: $agentAddress }) {
+    totalCount
+    items {
+      id
+      minAmount
+      maxAmount
+      timestamp
+      blockNumber
+      market {
+        id
+        protocolCode
+        auxId
+        flags
+        marketAddress
+        collateralToken {
+          address
+          symbol
+          decimals
+        }
+        loanToken {
+          address
+          symbol
+          decimals
+        }
+      }
+    }
+  }
+}
